@@ -14,26 +14,22 @@ const sequelize = new Sequelize({
 });
 
 const Invite = sequelize.define('Invite', {
-    id: { type: DataTypes.BIGINT, primaryKey: true },
-    code: DataTypes.STRING,
-    inviterid: DataTypes.BIGINT,
+    code: { type: DataTypes.STRING, primaryKey: true, unique: true },
+    inviterId: DataTypes.BIGINT,
     uses: DataTypes.INTEGER
 }, { freezeTableName: true });
 
 const User = sequelize.define('User', {
-    id: { type: DataTypes.BIGINT, primaryKey: true },
+    id: { type: DataTypes.BIGINT, primaryKey: true, unique: true },
     name: DataTypes.STRING
 }, { freezeTableName: true });
 
-async function connect() {
-    try {
-        await sequelize.authenticate();
-        console.log('Database connection has been established successfully.');
-    } catch (e) {
-        console.error('Unable to establish connection with database', e);
-    }
+try {
+    sequelize.authenticate();
+    console.log('Database connection has been established successfully');
+    sequelize.sync({ alter: true });
+} catch (e) {
+    console.error('Unable to establish connection with database:', e);
 }
-
-connect()
 
 module.exports = { sequelize, Invite, User }
