@@ -1,0 +1,8 @@
+{
+  "name": "rustwave-discord-bot",
+  "version": "1.0.0",
+  "description": "Discord bot for discord.rustwave.com",
+  "main": "index.js",
+  "scripts": { },
+  "author": "geoe9"
+}
