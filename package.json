@@ -6,9 +6,8 @@
   "scripts": {},
   "author": "geoe9",
   "dependencies": {
-    "@sequelize/mariadb": "^7.0.0-alpha.42",
+    "chalk": "^4.1.2",
     "discord.js": "^14.16.3",
-    "mariadb": "^3.3.2",
     "rustrcon": "^1.0.2",
     "sequelize": "^6.37.3",
     "sqlite3": "^5.1.7"
