@@ -1,5 +1,5 @@
 const config = require('../../config.json')
-const { Sequelize, DataTypes } = require('@sequelize/core');
+const { Sequelize, DataTypes, Model } = require('@sequelize/core');
 const { MariaDbDialect } = require('@sequelize/mariadb')
  
 const sequelize = new Sequelize({
@@ -13,16 +13,24 @@ const sequelize = new Sequelize({
     connectTimeout: 1000
 });
 
-const Invite = sequelize.define('Invite', {
-    code: { type: DataTypes.STRING, primaryKey: true, unique: true },
-    inviterId: DataTypes.BIGINT,
-    uses: DataTypes.INTEGER
-}, { freezeTableName: true });
+class InviteTracker extends Model {
+    getTotalInvites() {
+        return [this.realInvites + this.fakeInvites];
+    }
+}
 
-const User = sequelize.define('User', {
-    id: { type: DataTypes.BIGINT, primaryKey: true, unique: true },
-    name: DataTypes.STRING
-}, { freezeTableName: true });
+InviteTracker.init(
+    {
+        id: { type: DataTypes.BIGINT, primaryKey: true, unique: true },
+        name: DataTypes.STRING,
+        realInvites: DataTypes.INTEGER,
+        fakeInvites: DataTypes.INTEGER
+    },
+    {
+        sequelize,
+        tableName: "InviteTracker"
+    }
+)
 
 try {
     sequelize.authenticate();
@@ -32,4 +40,4 @@ try {
     console.error('Unable to establish connection with database:', e);
 }
 
-module.exports = { sequelize, Invite, User }
+module.exports = { InviteTracker }
