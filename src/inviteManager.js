@@ -29,11 +29,13 @@ async function processNewMember(guild, member) {
         });
     });
     const welcomeEmbed = new EmbedBuilder()
+        .setColor("#0B82AE")
         .setDescription(`Welcome **<@${member.user.id}>** to **Rustwave**! We hope you enjoy your stay. Check out <#${config.discord.rulesChannelId}> and <#${config.discord.annoucementsChannelId}> to get started.`)
         .setImage("https://i.imgur.com/fZ62BLc.png");
     if (invite.inviter instanceof User && !config.discord.excludeInvites.includes(invite.inviter.id)) {
         const user = await addRealInvite(invite.inviter);
         const inviteEmbed = new EmbedBuilder()
+            .setColor("#0B82AE")
             .setDescription(`**<@${member.user.id}>** was invited by **<@${user.id}>** who now has **${user.getTotalInvites()}** total invites! Only **${Math.max(0, config.discord.inviteRewardAmount - user.getTotalInvites())}** more to go before they recieve 1 month of VIP.`);
         logChannel.send({ embeds: [welcomeEmbed, inviteEmbed] });
     } else {
