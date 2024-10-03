@@ -52,7 +52,7 @@ async function addRealInvite(inviter) {
             return user;
         }
     });
-    return InviteTracker.create({
+    return await InviteTracker.create({
         id: inviter.id,
         name: inviter.username,
         realInvites: 1,
@@ -60,7 +60,7 @@ async function addRealInvite(inviter) {
     })
 }
 
-function addFakeInvite(user) {
+async function addFakeInvite(user) {
     const users = InviteTracker.findAll();
     users.each(async user => {
         if (user.dataValues.id == user.id) {
@@ -70,7 +70,7 @@ function addFakeInvite(user) {
             return;
         }
     });
-    InviteTracker.create({
+    await InviteTracker.create({
         id: user.id,
         name: user.username,
         realInvites: 0,
