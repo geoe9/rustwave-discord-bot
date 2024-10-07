@@ -26,7 +26,7 @@ class RconConnectionCollection {
 
     sendCommand(command) {
         this.#rcons.forEach(server => {
-            server.sendConnect(command);
+            server.sendCommand(command);
         });
     }
 
