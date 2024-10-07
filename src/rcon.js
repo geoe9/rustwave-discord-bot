@@ -12,12 +12,6 @@ class RconConnectionCollection {
         this.client = client;
     }
 
-    set linkManager(linkManager) {
-        this.#rcons.forEach((server) => {
-            server.linkManager = linkManager;
-        });
-    }
-
     connect() {
         this.#rcons.forEach(server => {
             server.connect();
@@ -44,7 +38,6 @@ class RconConnection {
         });
         this.shortname = shortname;
         this.client = client;
-        this.linkManager = null;
 
         this.rcon.on('error', err => {
             console.log(`[RCON Manager] Encountered an error while tring to connect to ${chalk.red(this.shortname)}\n:[ ${chalk.red("ERROR")} ]\n${err.message}`);
@@ -76,7 +69,7 @@ class RconConnection {
             if (content == "object") return;
     
             if (content.includes("DiscordLink")) {
-                this.linkManager.recieveLinkCommand(content);
+                this.client.linkManager.recieveLinkCommand(content);
             }
         });
 
@@ -89,10 +82,6 @@ class RconConnection {
                 } catch(err) { }
             });
         }, 60000);
-    }
-
-    set setLinkManager(linkManager) {
-        this.linkManager = linkManager;
     }
 
     connect() {

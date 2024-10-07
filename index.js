@@ -16,18 +16,17 @@ const client = new Client({ intents: [
 
 client.commands = new Collection()
 
-const rcons = new RconConnectionCollection(client, config.servers);
-const linkManager = new LinkManager(client, rcons)
-const welcomer = new Welcomer(client);
+client.rcons = new RconConnectionCollection(client, config.servers);
+client.linkManager = new LinkManager(client)
+client.welcomer = new Welcomer(client);
 
 client.once(Events.ClientReady, async readyClient => {
 	console.log(`Successfully logged in to Discord as ${readyClient.user.tag}`);
     const guild = await client.guilds.fetch(config.discord.guildId);
     registerCommands(client);
     inviteManager.updateInviteTable(guild);
-    rcons.linkManager = linkManager;
-    rcons.connect();
-    linkManager.setActivity(client);
+    client.rcons.connect();
+    client.linkManager.setActivity(client);
 });
 
 client.on(Events.GuildMemberAdd, async member => {
@@ -69,12 +68,12 @@ client.on(Events.MessageCreate, async message => {
 });
 
 client.on(Events.GuildMemberRemove, async member => {
-    const isLinked = await linkManager.checkIsDiscordLinked(member.id);
-    if (isLinked) rcons.sendCommand(`discordLink_unlinkPlayer ${isLinked.steam_id}`);
+    const isLinked = await client.linkManager.checkIsDiscordLinked(member.id);
+    if (isLinked) client.rcons.sendCommand(`discordLink_unlinkPlayer ${isLinked.steam_id}`);
 });
 
 client.on(Events.GuildMemberUpdate, (oldStatus, newStatus) => {
-    linkManager.memberUpdate(oldStatus, newStatus);
+    client.linkManager.memberUpdate(oldStatus, newStatus);
 });
 
 client.login(config.discord.token);

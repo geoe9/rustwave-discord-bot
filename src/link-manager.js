@@ -4,9 +4,8 @@ const { ActivityType, EmbedBuilder } = require('discord.js');
 
 class LinkManager {
 
-    constructor(client, rcons) {
+    constructor(client) {
         this.client = client;
-        this.rcons = rcons;
         this.addingRoles = [];
         this.removingRoles = [];
         this.syncRoles = [];
@@ -31,7 +30,7 @@ class LinkManager {
                 this.checkLinkStatus(data);
                 break;
             case "VerifyUnlink":
-                this.rcons.sendCommand(`discordLink_unlinkPlayer ${data.SteamID}`);
+                this.client.rcons.sendCommand(`discordLink_unlinkPlayer ${data.SteamID}`);
                 break;
             case "RolesToSync":
                 data.rolesToSync.forEach(role => { if(!this.syncRoles.includes(role)) this.syncRoles.push(role) });    
@@ -106,7 +105,7 @@ class LinkManager {
         if(member.avatar != null) profilePicture = `https://cdn.discordapp.com/guilds/${config.discord.guildId}/users/${member.id}/avatars/${member.avatar}.png`;
         else profilePicture = member.user.displayAvatarURL().split(".webp")[0] + ".png";
     
-        this.rcons.sendCommand(`discordLink_updatePlayer ${isLinked.steam_id} ${isLinked.discord_id} true ${member.premiumSince != null} ${profilePicture} ${steamData.picture} ${member.displayName}`);
+        this.client.rcons.sendCommand(`discordLink_updatePlayer ${isLinked.steam_id} ${isLinked.discord_id} true ${member.premiumSince != null} ${profilePicture} ${steamData.picture} ${member.displayName}`);
     }
 
     async roleChanged(data) {
@@ -228,16 +227,16 @@ class LinkManager {
     
         config.link.linkCommands.forEach(cmd => {
             if(cmd.onFirstLink && alreadyLinked) return;
-            this.rcons.sendCommand(cmd.command.replace("{steamid}", steamId).replace("{name}", steamInfo.personaname), true);
+            this.client.rcons.sendCommand(cmd.command.replace("{steamid}", steamId).replace("{name}", steamInfo.personaname), true);
         });
     
         LinkSavedCodes.destroy({ where: { userId: steamId } })
     
-        this.rcons.sendCommand(`discordLink_updatePlayer ${steamId} ${interaction.user.id} true ${doesBoost} ${profilePicture} ${steamInfo.avatarfull} ${interaction.user.username}`);
+        this.client.rcons.sendCommand(`discordLink_updatePlayer ${steamId} ${interaction.user.id} true ${doesBoost} ${profilePicture} ${steamInfo.avatarfull} ${interaction.user.username}`);
     
         config.link.linkedRoles.forEach(role => { if(role.length > 10 && parseInt(role) != undefined) member?.roles.add(role) });
     
-        syncRoles.forEach(role => { if(member.roles.cache.has(role)) this.rcons.sendCommand(`discordLink_roleChanged ${interaction.user.id} ${role} true`) })
+        syncRoles.forEach(role => { if(member.roles.cache.has(role)) this.client.rcons.sendCommand(`discordLink_roleChanged ${interaction.user.id} ${role} true`) })
     
         if(config.link.linkLogsChannelId) this.sendLinkEmbed(interaction, steamInfo, time);
     
@@ -248,7 +247,7 @@ class LinkManager {
         let unlinkTime = (Date.now() / 1000).toString();
     
         config.link.unlinkCommands.forEach(cmd => {
-            this.rcons.sendCommand(cmd.replace("{steamid}", dbInfo.steam_id), true, true);
+            this.client.rcons.sendCommand(cmd.replace("{steamid}", dbInfo.steam_id), true, true);
         });
     
         if(unlinkTime.includes('.')) unlinkTime = unlinkTime.split('.')[0];
@@ -350,7 +349,7 @@ class LinkManager {
     
         if(wasBooster != isBooster) {
             this.updateDatabase(newStatus.user.username, isBooster, newStatus.user.id);
-            this.rcons.sendCommand(`discordLink_updatePlayer ${isLinked.steam_id} ${newStatus.id} true ${isBooster} ${profilePicture} false ${newStatus.displayName}`);
+            this.client.rcons.sendCommand(`discordLink_updatePlayer ${isLinked.steam_id} ${newStatus.id} true ${isBooster} ${profilePicture} false ${newStatus.displayName}`);
         } else if(oldRoles.length != newRoles.length) {
             let addedRoles = newStatus.roles.member._roles.filter(x => !oldStatus.roles.cache.has(x));
             let removedRoles = oldStatus.roles.member._roles.filter(x => !newStatus.roles.cache.has(x));
@@ -363,7 +362,7 @@ class LinkManager {
                     const index = add.roles.indexOf(2);
                     add.roles.splice(index, 1);
                 } else {
-                    this.rcons.sendCommand(`discordLink_roleChanged ${newStatus.id} ${role} true`);
+                    this.client.rcons.sendCommand(`discordLink_roleChanged ${newStatus.id} ${role} true`);
                 }
             }
     
@@ -375,7 +374,7 @@ class LinkManager {
                     const index = remove.roles.indexOf(2);
                     remove.roles.splice(index, 1);
                 } else {
-                    this.rcons.sendCommand(`discordLink_roleChanged ${newStatus.id} ${role} false`);
+                    this.client.rcons.sendCommand(`discordLink_roleChanged ${newStatus.id} ${role} false`);
                 }
             }
         } else if(newPFP != oldPFP) {
@@ -384,7 +383,7 @@ class LinkManager {
             if(newPFP != null) profilePicture = `https://cdn.discordapp.com/guilds/${config.discord}/users/${newStatus.id}/avatars/${newStatus.avatar}.png`;
             else profilePicture = newStatus.user.displayAvatarURL().split(".webp")[0] + ".png";
     
-            this.rcons.sendCommand(`discordLink_updatePlayer ${isLinked.steam_id} ${newStatus.id} true ${isBooster} ${profilePicture} false ${newStatus.displayName}`);
+            this.client.rcons.sendCommand(`discordLink_updatePlayer ${isLinked.steam_id} ${newStatus.id} true ${isBooster} ${profilePicture} false ${newStatus.displayName}`);
         }
     }
     

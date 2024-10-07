@@ -1,6 +1,4 @@
-const config = require('../../../config.json')
-const { SlashCommandBuilder, InteractionContextType, EmbedBuilder } = require('discord.js');
-const { checkLinkingCode } = require('../../link-manager.js')
+const { SlashCommandBuilder, InteractionContextType } = require('discord.js');
 
 const data = new SlashCommandBuilder()
 	.setName('link')
@@ -10,7 +8,7 @@ const data = new SlashCommandBuilder()
 
 const execute = async (interaction) => {
 	await interaction.deferReply({ ephemeral: true });
-	await checkLinkingCode(interaction.options.getString("code"), interaction).then(response => {
+	await interaction.client.linkManager.checkLinkingCode(interaction.options.getString("code"), interaction).then(response => {
         interaction.editReply({ content: response, ephemeral: true });
     });
 }
