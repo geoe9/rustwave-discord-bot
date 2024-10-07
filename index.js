@@ -2,7 +2,8 @@ const { Client, Events, GatewayIntentBits, Collection } = require('discord.js');
 const config = require('./config.json');
 const inviteManager = require('./src/invite-manager.js');
 const registerCommands = require('./src/register-commands.js');
-const linkManager = require('./src/link-manager.js');
+const { LinkManager } = require('./src/link-manager.js');
+const { RconConnectionCollection } = require('./src/rcon.js');
 
 const client = new Client({ intents: [
     GatewayIntentBits.Guilds,
@@ -14,12 +15,15 @@ const client = new Client({ intents: [
 
 client.commands = new Collection()
 
+const rcons = new RconConnectionCollection(client, config.servers);
+const linkManager = new LinkManager(client, rcons)
+
 client.once(Events.ClientReady, async readyClient => {
 	console.log(`Successfully logged in to Discord as ${readyClient.user.tag}`);
     const guild = await client.guilds.fetch(config.discord.guildId);
     registerCommands(client);
     inviteManager.updateInviteTable(guild);
-    linkManager.connectAll(client);
+    rcons.connect();
     linkManager.setActivity(client);
 });
 
@@ -62,7 +66,7 @@ client.on(Events.MessageCreate, async message => {
 
 client.on(Events.GuildMemberRemove, async member => {
     const isLinked = await linkManager.checkIsDiscordLinked(member.id);
-    if(isLinked) linkManager.sendCommand(`discordLink_unlinkPlayer ${isLinked.steam_id}`);
+    if (isLinked) rcons.sendCommand(`discordLink_unlinkPlayer ${isLinked.steam_id}`);
 });
 
 client.on(Events.GuildMemberUpdate, (oldStatus, newStatus) => {
