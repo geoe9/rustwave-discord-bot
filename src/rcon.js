@@ -36,7 +36,7 @@ class RconConnection {
 
     #commandQueue = [];
 
-    constructor(client, linkManager, shortname, ip, port, password) {
+    constructor(client, shortname, ip, port, password) {
         this.rcon = new rustRcon.Client({
             ip: ip,
             port: port,
