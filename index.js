@@ -23,14 +23,13 @@ client.once(Events.ClientReady, async readyClient => {
 	console.log(`Successfully logged in to Discord as ${readyClient.user.tag}`);
     const guild = await client.guilds.fetch(config.discord.guildId);
     registerCommands(client);
-    client.inviteManager.updateInviteTable(guild);
+    client.inviteManager.updateInviteTable();
     client.rcons.connect();
     client.linkManager.setActivity(client);
 });
 
 client.on(Events.GuildMemberAdd, async member => {
-    const guild = await client.guilds.fetch(config.discord.guildId);
-    client.inviteManager.processNewMember(guild, member); 
+    client.inviteManager.processNewMember(member); 
 });
 
 client.on(Events.InviteCreate, async invite => {
