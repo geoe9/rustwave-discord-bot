@@ -31,7 +31,7 @@ client.once(Events.ClientReady, async readyClient => {
 
 client.on(Events.GuildMemberAdd, async member => {
     const guild = await client.guilds.fetch(config.discord.guildId);
-    welcomer.sendWelcome(member);
+    client.welcomer.sendWelcome(member);
     inviteManager.processNewMember(guild, member); 
 });
 
