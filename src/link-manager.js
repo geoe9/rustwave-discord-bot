@@ -150,7 +150,7 @@ class LinkManager {
                 { isLinked: false },
                 { where: { steam_id: steamId } }
             )
-            this.sendUnlinkEmbed(this.client, isLinked);
+            this.sendUnlinkEmbed(isLinked);
         }
     }
 
