@@ -45,10 +45,10 @@ class InviteManager {
                 .setColor("#0B82AE")
                 .setDescription(`**<@${member.user.id}>** was invited by **<@${user.id}>** who now has **${user.getTotalInvites()}** total invites! Only **${Math.max(0, config.invites.inviteRewardAmount - user.getTotalInvites())}** more to go before they recieve 1 month of VIP.`);
             welcomeChannel.send({ embeds: [welcomeEmbed, inviteEmbed] });
+            this.#invites[invite.code] = invite.uses;
         } else {
             welcomeChannel.send({ embeds: [welcomeEmbed] });
         }
-        this.#invites[invite.code] = invite.uses;
     }
 
     async addRealInvite(target) {
