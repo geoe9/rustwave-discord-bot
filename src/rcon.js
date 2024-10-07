@@ -76,7 +76,7 @@ class RconConnection {
             if (content == "object") return;
     
             if (content.includes("DiscordLink")) {
-                this.linkManager.recieveLinkCommand(this.client, content);
+                this.linkManager.recieveLinkCommand(content);
             }
         });
 
