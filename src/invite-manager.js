@@ -12,12 +12,12 @@ class InviteManager {
     }
 
     async updateInviteTable() {
-        this.#guild = await this.client.guilds.fetch();
+        this.#guild = await this.client.guilds.fetch(config.discord.guildId);
         this.#guild.invites.fetch().then(guildInvites =>{
             guildInvites.each(guildInvite => {
                 this.#invites[guildInvite.code] = guildInvite.uses;
             });
-            console.log(`[Invite Manager] Loaded ${Object.keys(invites).length} invites into memory`)
+            console.log(`[Invite Manager] Loaded ${Object.keys(this.#invites).length} invites into memory`)
         });
     }
 
