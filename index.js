@@ -21,11 +21,10 @@ client.inviteManager = new InviteManager(client);
 
 client.once(Events.ClientReady, async readyClient => {
 	console.log(`Successfully logged in to Discord as ${readyClient.user.tag}`);
-    const guild = await client.guilds.fetch(config.discord.guildId);
     registerCommands(client);
     client.inviteManager.updateInviteTable();
     client.rcons.connect();
-    client.linkManager.setActivity(client);
+    client.linkManager.setActivity();
 });
 
 client.on(Events.GuildMemberAdd, async member => {

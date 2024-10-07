@@ -4,15 +4,16 @@ const { EmbedBuilder, User } = require('discord.js')
 
 class InviteManager {
     
-    #invites = {}
+    #invites = {};
+    #guild;
 
     constructor(client) {
         this.client = client;
-        this.guild = this.client.guilds.fetch(config.discord.guildId);
     }
 
-    updateInviteTable() {
-        this.guild.invites.fetch().then(guildInvites =>{
+    async updateInviteTable() {
+        this.#guild = await this.client.guilds.fetch();
+        this.#guild.invites.fetch().then(guildInvites =>{
             guildInvites.each(guildInvite => {
                 this.#invites[guildInvite.code] = guildInvite.uses;
             });
@@ -26,9 +27,9 @@ class InviteManager {
     }
 
     async processNewMember(member) {
-        const welcomeChannel = await this.guild.channels.fetch(config.discord.welcomeChannelId);
+        const welcomeChannel = await this.#guild.channels.fetch(config.discord.welcomeChannelId);
         let invite = null;
-        this.guild.invites.fetch().then(guildInvites => {
+        this.#guild.invites.fetch().then(guildInvites => {
             guildInvites.each(guildInvite => {
                 if(guildInvite.uses != invites[guildInvite.code] && guildInvite.inviter instanceof User) {
                     invite = guildInvite.invite;
