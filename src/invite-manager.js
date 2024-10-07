@@ -29,18 +29,18 @@ class InviteManager {
     async processNewMember(member) {
         const welcomeChannel = await this.#guild.channels.fetch(config.discord.welcomeChannelId);
         let invite = null;
-        this.#guild.invites.fetch().then(guildInvites => {
-            guildInvites.each(guildInvite => {
-                if(guildInvite.uses != invites[guildInvite.code] && guildInvite.inviter instanceof User) {
-                    invite = guildInvite.invite;
-                }
-            });
+        const guildInvites = await this.#guild.invites.fetch();
+        guildInvites.each(guildInvite => {
+            if(guildInvite.uses != this.#invites[guildInvite.code] && guildInvite.inviter instanceof User) {
+                invite = guildInvite.invite;
+            }
         });
+        if (!invite) return;
         const welcomeEmbed = new EmbedBuilder()
             .setColor("#0B82AE")
             .setDescription(`Welcome **<@${member.user.id}>** to **Rustwave**! We hope you enjoy your stay. Check out <#${config.discord.rulesChannelId}> and <#${config.discord.annoucementsChannelId}> to get started.`)
             .setImage("https://i.imgur.com/fZ62BLc.png");
-        if (invite.inviter instanceof User && !config.invites.excludeInviteUsers.includes(invite.inviter.id) && !config.invites.excludeInviteCodes.includes(invite.code)) {
+        if (!config.invites.excludeInviteUsers.includes(invite.inviter.id) && !config.invites.excludeInviteCodes.includes(invite.code)) {
             const user = await addRealInvite(invite.inviter);
             const inviteEmbed = new EmbedBuilder()
                 .setColor("#0B82AE")
