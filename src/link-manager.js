@@ -21,7 +21,7 @@ class LinkManager {
                 this.addCodeToDatabase(data);
                 break;
             case "Unlinked":
-                this.unlinkPlayer(data, data.steamId);
+                this.unlinkPlayer(data.steamId);
                 break;
             case "RoleChanged":
                 this.roleChanged(data);
