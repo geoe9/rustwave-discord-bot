@@ -5,8 +5,8 @@ class Welcomer {
 
     constructor(client) {
         this.embed = new EmbedBuilder()
-            .setColor()
-            .setImage();
+            .setColor("#4A90E2")
+            .setImage("https://i.imgur.com/fZ62BLc.png");
         this.client = client;
     }
 
