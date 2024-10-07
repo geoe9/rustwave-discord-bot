@@ -35,12 +35,11 @@ class InviteManager {
                 invite = guildInvite.invite;
             }
         });
-        if (!invite) return;
         const welcomeEmbed = new EmbedBuilder()
             .setColor("#0B82AE")
             .setDescription(`Welcome **<@${member.user.id}>** to **Rustwave**! We hope you enjoy your stay. Check out <#${config.discord.rulesChannelId}> and <#${config.discord.annoucementsChannelId}> to get started.`)
             .setImage("https://i.imgur.com/fZ62BLc.png");
-        if (!config.invites.excludeInviteUsers.includes(invite.inviter.id) && !config.invites.excludeInviteCodes.includes(invite.code)) {
+        if (invite && !config.invites.excludeInviteUsers.includes(invite.inviter.id) && !config.invites.excludeInviteCodes.includes(invite.code)) {
             const user = await addRealInvite(invite.inviter);
             const inviteEmbed = new EmbedBuilder()
                 .setColor("#0B82AE")
