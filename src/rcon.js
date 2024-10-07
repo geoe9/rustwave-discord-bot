@@ -12,6 +12,12 @@ class RconConnectionCollection {
         this.client = client;
     }
 
+    set setLinkManager(linkManager) {
+        this.#rcons.forEach((server) => {
+            server.linkManager = linkManager;
+        });
+    }
+
     connect() {
         this.#rcons.forEach(server => {
             server.connect();
@@ -30,7 +36,7 @@ class RconConnection {
 
     #commandQueue = [];
 
-    constructor(client, shortname, ip, port, password) {
+    constructor(client, linkManager, shortname, ip, port, password) {
         this.rcon = new rustRcon.Client({
             ip: ip,
             port: port,
@@ -38,6 +44,7 @@ class RconConnection {
         });
         this.shortname = shortname;
         this.client = client;
+        this.linkManager = null;
 
         this.rcon.on('error', err => {
             console.log(`[RCON Manager] Encountered an error while tring to connect to ${chalk.red(this.shortname)}\n:[ ${chalk.red("ERROR")} ]\n${err.message}`);
@@ -69,7 +76,7 @@ class RconConnection {
             if (content == "object") return;
     
             if (content.includes("DiscordLink")) {
-                this.recieveLinkCommand(this.client, content);
+                this.linkManager.recieveLinkCommand(this.client, content);
             }
         });
 
@@ -82,6 +89,10 @@ class RconConnection {
                 } catch(err) { }
             });
         }, 60000);
+    }
+
+    set setLinkManager(linkManager) {
+        this.linkManager = linkManager;
     }
 
     connect() {
