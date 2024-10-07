@@ -1,5 +1,4 @@
 const { SlashCommandBuilder, InteractionContextType, PermissionFlagsBits } = require('discord.js');
-const { addFakeInvite } = require('../../invite-manager.js')
 
 const data = new SlashCommandBuilder()
 	.setName('invites')
@@ -17,7 +16,7 @@ const execute = async (interaction) => {
 	await interaction.deferReply({ ephemeral: true });
 	const target = interaction.options.getUser('target');
 	const amount = interaction.options.getInteger('amount');
-	await addFakeInvite(target, amount)
+	await interaction.client.inviteManager.addFakeInvite(target, amount)
 	await interaction.editReply({ content: `Added ${amount} fake invites to <@${target.id}>`, ephemeral: true });
 }
 

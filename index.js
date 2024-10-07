@@ -1,10 +1,9 @@
 const { Client, Events, GatewayIntentBits, Collection } = require('discord.js');
 const config = require('./config.json');
-const inviteManager = require('./src/invite-manager.js');
+const { InviteManager } = require('./src/invite-manager.js');
 const registerCommands = require('./src/register-commands.js');
 const { LinkManager } = require('./src/link-manager.js');
 const { RconConnectionCollection } = require('./src/rcon.js');
-const { Welcomer } = require('./src/welcomer.js');
 
 const client = new Client({ intents: [
     GatewayIntentBits.Guilds,
@@ -17,26 +16,25 @@ const client = new Client({ intents: [
 client.commands = new Collection()
 
 client.rcons = new RconConnectionCollection(client, config.servers);
-client.linkManager = new LinkManager(client)
-client.welcomer = new Welcomer(client);
+client.linkManager = new LinkManager(client);
+client.inviteManager = new InviteManager(client);
 
 client.once(Events.ClientReady, async readyClient => {
 	console.log(`Successfully logged in to Discord as ${readyClient.user.tag}`);
     const guild = await client.guilds.fetch(config.discord.guildId);
     registerCommands(client);
-    inviteManager.updateInviteTable(guild);
+    client.inviteManager.updateInviteTable(guild);
     client.rcons.connect();
     client.linkManager.setActivity(client);
 });
 
 client.on(Events.GuildMemberAdd, async member => {
     const guild = await client.guilds.fetch(config.discord.guildId);
-    client.welcomer.sendWelcome(member);
-    inviteManager.processNewMember(guild, member); 
+    client.inviteManager.processNewMember(guild, member); 
 });
 
 client.on(Events.InviteCreate, async invite => {
-    inviteManager.processNewInvite(invite)
+    client.inviteManager.processNewInvite(invite)
 });
 
 client.on(Events.InteractionCreate, async interaction => {
