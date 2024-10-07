@@ -140,7 +140,7 @@ class LinkManager {
                 if(role.length > 10 && parseInt(role) != undefined) member.roles.remove(role);
             });
     
-            syncRoles.forEach(role => {
+            this.syncRoles.forEach(role => {
                 if(role.length > 10 && parseInt(role) != undefined) member.roles.remove(role);
             });
         }
