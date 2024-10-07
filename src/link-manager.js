@@ -150,7 +150,7 @@ class LinkManager {
                 { isLinked: false },
                 { where: { steam_id: steamId } }
             )
-            this.sendUnlinkEmbed(client, isLinked);
+            this.sendUnlinkEmbed(this.client, isLinked);
         }
     }
 
@@ -275,7 +275,7 @@ class LinkManager {
         ]
     
         let body = { color: config.link.linkEmbedColor, thumbnail: steamInfo.avatarfull, description: `**Linked <t:${time}>**`, fields: fields, footer: {text: "Player Linked"} };
-        this.fancyReply(this.client, body, config.link.linkLogsChannelId);
+        this.fancyReply(body, config.link.linkLogsChannelId);
     }
 
     async getSteamInfo(steamId) {
