@@ -23,7 +23,7 @@ client.once(Events.ClientReady, async readyClient => {
     const guild = await client.guilds.fetch(config.discord.guildId);
     registerCommands(client);
     inviteManager.updateInviteTable(guild);
-    rcons.setLinkManager(linkManager);
+    rcons.linkManager = linkManager;
     rcons.connect();
     linkManager.setActivity(client);
 });

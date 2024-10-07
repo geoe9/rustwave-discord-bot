@@ -12,7 +12,7 @@ class RconConnectionCollection {
         this.client = client;
     }
 
-    set setLinkManager(linkManager) {
+    set linkManager(linkManager) {
         this.#rcons.forEach((server) => {
             server.linkManager = linkManager;
         });
