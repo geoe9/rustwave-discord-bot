@@ -1,9 +1,9 @@
 const { Client, Events, GatewayIntentBits, Collection } = require('discord.js');
 const config = require('./config.json');
-const { InviteManager } = require('./src/invite-manager.js');
+const { InviteManager } = require('./src/InviteManager.js');
 const registerCommands = require('./src/register-commands.js');
-const { LinkManager } = require('./src/link-manager.js');
-const { RconConnectionCollection } = require('./src/rcon.js');
+const { LinkManager } = require('./src/LinkManager.js');
+const { RconConnectionCollection } = require('./src/RconConnection.js');
 
 const client = new Client({ intents: [
     GatewayIntentBits.Guilds,
