@@ -94,7 +94,7 @@ class RconConnection {
             this.rcon.send(`${command}`, "RustwaveBot", 200);
         } catch(err){
             console.log(err);
-            commandQueue.push(command);
+            this.#commandQueue.push(command);
         }
     }
 
