@@ -236,7 +236,7 @@ class LinkManager {
     
         config.link.linkedRoles.forEach(role => { if(role.length > 10 && parseInt(role) != undefined) member?.roles.add(role) });
     
-        syncRoles.forEach(role => { if(member.roles.cache.has(role)) this.client.rcons.sendCommand(`discordLink_roleChanged ${interaction.user.id} ${role} true`) })
+        this.syncRoles.forEach(role => { if(member.roles.cache.has(role)) this.client.rcons.sendCommand(`discordLink_roleChanged ${interaction.user.id} ${role} true`) })
     
         if(config.link.linkLogsChannelId) this.sendLinkEmbed(interaction, steamInfo, time);
     
