@@ -40,7 +40,7 @@ class InviteManager {
             .setDescription(`Welcome **<@${member.user.id}>** to **Rustwave**! We hope you enjoy your stay. Check out <#${config.discord.rulesChannelId}> and <#${config.discord.annoucementsChannelId}> to get started.`)
             .setImage("https://i.imgur.com/fZ62BLc.png");
         if (invite && !config.invites.excludeInviteUsers.includes(invite.inviter.id) && !config.invites.excludeInviteCodes.includes(invite.code)) {
-            const user = await addRealInvite(invite.inviter);
+            const user = await this.client.inviteManager.addRealInvite(invite.inviter);
             const inviteEmbed = new EmbedBuilder()
                 .setColor("#0B82AE")
                 .setDescription(`**<@${member.user.id}>** was invited by **<@${user.id}>** who now has **${user.getTotalInvites()}** total invites! Only **${Math.max(0, config.invites.inviteRewardAmount - user.getTotalInvites())}** more to go before they recieve 1 month of VIP.`);
